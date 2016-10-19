@@ -1,0 +1,28 @@
+{:components
+ {:figwheel duct.component.figwheel/server
+  :garden duct.component.garden/server}
+ :dependencies
+ {:figwheel [:garden]}
+ :config
+ {:app
+  {:middleware {:functions {:stacktrace ring.middleware.stacktrace/wrap-stacktrace}
+                :applied   ^:replace [:not-found :webjars :ring-defaults :route-aliases :stacktrace]}}
+  :http {:port 3000}
+  :db {:uri db-uri}
+  :figwheel {:css-dirs ["target/figwheel/public/css"]
+             :builds
+             [{:source-paths ["src/main/cljs" "src/main/cljc" "src/dev/cljs"]
+               :build-options
+               {:optimizations :none
+                :main "cljs.user"
+                :asset-path "/js"
+                :output-to  "target/figwheel/public/js/main.js"
+                :output-dir "target/figwheel/public/js"
+                :source-map true
+                :source-map-path "/js"}}]}
+
+  :garden {:builds [{:id "screen"
+                     :source-paths ["src/main/cljc"]
+                     :stylesheet bluemoon.styles/screen
+                     :compiler {:output-to "target/figwheel/public/css/screen.css"
+                                :pretty-print? false}}]}}}
